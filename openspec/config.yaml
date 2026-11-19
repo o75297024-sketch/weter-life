@@ -1,0 +1,65 @@
+schema: spec-driven
+
+context: |
+  # Proyecto: AguaRecordatorio
+
+  PWA de recordatorios de hidratación con arquitectura cliente-servidor en capas.
+  Calcula una meta diaria de agua a partir del peso/edad del usuario, genera un
+  cronograma de tomas dentro de su ventana de vigilia, envía notificaciones web,
+  registra el consumo y calcula progreso diario y rachas.
+
+  ## Stack
+  - Frontend: HTML5 semántico, CSS3 (custom properties, Flexbox, Grid, BEM), JavaScript ES6+ (fetch, async/await, Service Worker, Web Notifications API).
+  - Backend: Node.js + Express, REST/JSON, JWT, bcryptjs, express-validator.
+  - Persistencia: SQLite3 en un único archivo `agua_recordatorio.db`, con `PRAGMA foreign_keys = ON`.
+
+  ## Estructura objetivo
+  - `src/frontend/` — cliente PWA (`index.html`, `assets/css`, `assets/js`, `assets/icons`).
+  - `src/backend/` — `config/`, `controllers/`, `middlewares/`, `models/`, `routes/`, `app.js`.
+  - `documentos/` — SRS, arquitectura, estándar de desarrollo y guía UI/UX (fuente de verdad funcional).
+  - `openspec/` — especificaciones vivas y cambios propuestos.
+
+  ## Documentos de referencia (fuente de verdad)
+  - `documentos/especificaci_n_de_requerimientos_de_software (1).md` — RF, RNF, reglas de negocio (RN-01 a RN-03).
+  - `documentos/arquitectura_del_sistema (1).md` — DDL de SQLite, endpoints REST, estrategia de notificaciones push.
+  - `documentos/est_ndar_de_desarrollo (1).md` — convenciones de nombres, estilo, API y commits.
+  - `documentos/gemini-code-1793200121383 (1).md` — paleta y lineamientos UI/UX.
+
+  ## Reglas de negocio clave
+  - RN-01: meta diaria = `peso_kg * 35` ml; +500 ml si hay actividad física o clima severo.
+  - RN-02: volumen por toma = meta diaria / (horas de vigilia * 60 / intervalo_minutos).
+  - RN-03: día cumplido y racha cuando el consumo alcanza al menos el 80% de la meta.
+
+  ## Convenciones obligatorias
+  - Nombres: `kebab-case` en archivos frontend, `camelCase` en variables/funciones, `PascalCase` en clases, `UPPER_SNAKE_CASE` en constantes, tablas `snake_case` plural, columnas `snake_case` singular, rutas REST `kebab-case` plural.
+  - JavaScript: `const`/`let` (prohibido `var`), `async/await` exclusivamente, `try/catch` obligatorio en controladores y `fetch`.
+  - SQL: únicamente sentencias preparadas con parámetros enlazados (`?`).
+  - CSS: convención BEM y colores solo mediante variables globales (`var(--color-primary)`).
+  - API: JSON, códigos 200/201/400/401/404/409/500 y estructura de error `{ status, codigo, mensaje }`.
+  - Commits: Conventional Commits (`feat:`, `fix:`, `docs:`, `style:`, `refactor:`), en presente y minúsculas.
+  - Idioma de los artefactos: español; conservar los encabezados estructurales y las palabras clave SHALL/MUST en inglés.
+
+rules:
+  proposal:
+    - Incluir siempre el alcance excluido (out of scope).
+    - Referenciar los RF/RN/RNF del SRS que cubre el cambio.
+  specs:
+    - Usar SHALL para requisitos funcionales y MUST/MUST NOT para restricciones de seguridad o integridad.
+    - Cada requisito debe incluir al menos un escenario con WHEN/THEN.
+    - Escribir escenarios sobre comportamiento observable (HTTP, UI, base de datos), no sobre detalles internos.
+    - Mantener los nombres de capacidad en kebab-case y en español.
+  design:
+    - Justificar decisiones contra las convenciones del estándar de desarrollo.
+    - Documentar endpoints, tablas y validaciones afectadas.
+  tasks:
+    - Ordenar las tareas backend → frontend y agruparlas por módulo.
+    - Cada tarea debe ser verificable y caber en menos de 2 horas.
+
+operations:
+  apply:
+    guidance:
+      - Ejecutar `npx openspec validate --all` antes de cerrar la implementación.
+      - No modificar los documentos de `documentos/` sin proponerlo en un cambio.
+  archive:
+    guidance:
+      - Resumir las capacidades actualizadas antes de archivar.
