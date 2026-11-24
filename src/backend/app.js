@@ -14,6 +14,7 @@ const { conectar } = require('./config/database');
 const { inicializarTablas } = require('./config/initDb');
 const AppError = require('./utils/AppError');
 const errorHandler = require('./middlewares/errorHandler');
+const authRoutes = require('./routes/authRoutes');
 
 /** Puerto de escucha; 3000 cuando `PORT` no está definido o no es numérico. */
 const PUERTO = Number(process.env.PORT) || 3000;
@@ -42,6 +43,9 @@ app.get('/api/health-check', (req, res) => {
     message: 'API AguaRecordatorio en funcionamiento'
   });
 });
+
+// Rutas modulares de la API
+app.use('/api/auth', authRoutes);
 
 // Cualquier ruta no registrada se convierte en un 404 mediante AppError.
 app.use((req, res, next) => {
